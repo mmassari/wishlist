@@ -17,7 +17,6 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 check
 audit-argument-checks
-skeleton:skeleton
 accounts-base
 accounts-password
 useraccounts:unstyled
@@ -42,5 +41,5 @@ simple:highlight.js
 less
 standard-minifier-css
 standard-minifier-js
-bootstrap
-nemo64:bootstrap
+twbs:bootstrap
+rajit:bootstrap3-datepicker

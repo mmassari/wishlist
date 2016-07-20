@@ -1,28 +1,28 @@
 <template name="feed">
   <div class="row">
-    <div class="twelve columns">
+    <div class="col-md-12">
       <form class="search-posts-form" data-id="search-posts-form">
-        <input type="text" class="u-full-width" placeholder="Search posts..." data-id="search-query">
+        <input type="text" class="form-control" placeholder="Search posts..." data-id="search-query">
       </form>
     </div>
   </div>
   <hr>
   <div class="row">
-    <div class="twelve columns">
+    <div class="col-md-12">
       <div class="text-center">
         <ul class="feed-filter">
-          <li><button type="button" class="{{activeIfFilterIs 'all'}}" data-id="all">All</button></li>
-          <li><button type="button" class="{{activeIfFilterIs 'following'}}" data-id="following">Following</button></li>
+          <li><button type="button" class="btn btn-default {{activeIfFilterIs 'all'}}" data-id="all">All</button></li>
+          <li><button type="button" class="btn btn-default {{activeIfFilterIs 'following'}}" data-id="following">Following</button></li>
         </ul>
       </div>
     </div>
   </div>
   <hr>
   <div class="row">
-    <div class="twelve columns">
+    <div class="col-md-12">
       <form data-id="insert-post-form">
-        {{>textareaAutocomplete settings=settings data-id="body" class="u-full-width insert-post-form" rows="1" placeholder="Write something..." }}
-        <input type="submit" class="button-primary u-pull-right" value="Submit">
+        {{>textareaAutocomplete settings=settings data-id="body" class="form-control insert-post-form" rows="1" placeholder="Write something..." }}
+        <input type="submit" class="btn btn-primary pull-right" value="Submit">
       </form>
     </div>
   </div>

@@ -3,16 +3,16 @@
   <div class="container" style="min-height: {{instance.minHeight.get}}">
     {{# if currentUser}}
       <div class="row">
-        <div class="four columns">
+        <div class="col-md-4">
           {{> navigation}}
         </div>
-        <div class="eight columns">
+        <div class="col-md-8">
           {{> Template.dynamic template=main}}
         </div>
       </div>
     {{else}}
       <div class="row">
-        <div class="four columns offset-by-four">
+        <div class="col-md-4 offset-4">
           {{> Template.dynamic template=main}}
         </div>
       </div>

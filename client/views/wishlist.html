@@ -1,82 +1,85 @@
 <template name="wishlist">
   {{#if showAllWishlists}}
-    <div class="row">
-      <div class="twelve columns">  
-        <button id="postWishlistButton" class="button-primary">Post Wishlist</button>    
-        <form data-id="search-wishlists-form">
-          <input type="text" class="u-full-width" placeholder="Search wishlists..." data-id="search-wishlists-query">
-        </form>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <button id="postWishlistButton" class="btn btn-primary">New Wishlist</button><br><br>
+      <form id="search-wishlists-form">
+        <input type="text" class="form-control" placeholder="Search wishlists..." id="search-wishlists-query">
+      </form>
     </div>
-    <div class="row">
-      <div class="twelve columns">
-        {{#each wishlists}}
-          <div id="{{_id}}" class="small-profile">
-            <b>{{title}}</b> <br/>
-            {{location}} <br/>
-            {{formatDate createdOn}}
-            {{#if isAuthor author}}
-              <button class="u-pull-right no-button" data-id="remove-wishlist">
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#each wishlists}}
+      <div id="{{_id}}" class="small-profile">
+        <b>{{title}}</b> <br/> {{location}} <br/> {{formatDate createdOn}} {{#if isAuthor author}}
+        <button class="u-pull-right no-button" id="remove-wishlist">
                 <i class="fa fa-trash"></i>
-              </button> 
-              <button class="u-pull-right no-button" data-id="edit-wishlist">
-                <i class="fa fa-pencil"></i>
               </button>
-            {{/if}}
-          </div>
-        {{/each}}
-        {{#if Template.subscriptionsReady}}
-          {{#unless instance.wishlistsCount.get}}
-            <div class="alert info">There are no matching wishlists to display</div>
-          {{/unless}}
-          {{#if hasMoreWishlists}}
-            <button class="u-full-width" data-id="load-more">Load more</button>
-          {{/if}}
-        {{else}}
-          <div class="text-center">Loading wishlists...</div>
-        {{/if}}   
+        <button class="u-pull-right no-button" id="edit-wishlist">
+                <i class="fa fa-pencil"></i>
+              </button> {{/if}}
       </div>
+      {{/each}} {{#if Template.subscriptionsReady}} {{#unless instance.wishlistsCount.get}}
+      <div class="alert info">There are no matching wishlists to display</div>
+      {{/unless}} {{#if hasMoreWishlists}}
+      <button class="u-full-width" id="load-more">Load more</button> {{/if}} {{else}}
+      <div class="text-center">Loading wishlists...</div>
+      {{/if}}
     </div>
-  {{else}}
-    {{#if showSingleWishlist}}
-      {{> singleWishlist}}
-    {{else}}
-      {{> addWishlist}}
-    {{/if}}
-  {{/if}} 
+  </div>
+  {{else}} {{#if showSingleWishlist}} {{> singleWishlist}} {{else}} {{> addWishlist}} {{/if}} {{/if}}
 </template>
 
 <template name="singleWishlist">
-  <button class="allWishlistsButton">All Wishlists</button>
-  {{#with getSingleWishlist}}
-    <h3>{{title}}</h3> 
-    {{schedule}} <br/>
-    Date posted: {{formatDate createdOn}} <br/>
-    Location: {{location}} <br/><br/>
-    <b>Description:</b> <br/>
-    {{description}} <br/><br/>
-    <b>Qualifications:</b> <br/>
-    {{qualifications}} <br/><br/>
-    <b>Responsibilities:</b> <br/>
-    {{responsibilities}} <br/><br/>
-    {{#if notAuthor author}}
-      <button id="applyNowButton" class="button-primary">I'm Interested!</button>
-    {{/if}}
-  {{/with}}
+  <button class="allWishlistsButton">All Wishlists</button> {{#with getSingleWishlist}}
+  <h3>{{title}}</h3>
+  {{schedule}} <br/> Date posted: {{formatDate createdOn}} <br/> Location: {{location}} <br/><br/>
+  <b>Description:</b> <br/> {{description}} <br/><br/>
+  <b>Qualifications:</b> <br/> {{qualifications}} <br/><br/>
+  <b>Responsibilities:</b> <br/> {{responsibilities}} <br/><br/> {{#if notAuthor author}}
+  <button id="applyNowButton" class="btn btn-primary">I'm Interested!</button> {{/if}} {{/with}}
 </template>
 
 <template name="addWishlist">
-  <button class="allWishlistsButton">All Wishlists</button>
-  <form data-id="addWishlist-form">
-    <input class="u-full-width addWishlist-single-line" rows="1" placeholder="Title" data-id="addWishlist-title" />
-    <textarea class="u-full-width addWishlist-single-line" rows="3" placeholder="Location" data-id="addWishlist-description"></textarea>
-    <input type="file" class="u-full-width addWishlist-single-line" placeholder="Title" data-id="addWishlist-image">
-    <input type="radio" class="addWishlist-single-line" data-id="addWishlist-private">
-    <input type="radio" class="addWishlist-single-line" data-id="addWishlist-private"  value="false">Public (every registered user can see and comment it)
-    <input type="radio" class="addWishlist-single-line" data-id="addWishlist-private"  value="true">Private (only you can see it)
-    <textarea class="u-full-width addWishlist-multi-line" rows="1" placeholder="Description" data-id="addWishlist-description"></textarea>
-    <textarea class="u-full-width addWishlist-multi-line" rows="1" placeholder="Responsibilities" data-id="addWishlist-responsibilities"></textarea>
-    <textarea class="u-full-width addWishlist-multi-line" rows="1" placeholder="Qualifications" data-id="addWishlist-qualifications"></textarea> 
-    <input type="submit" class="button-primary u-pull-right" data-id="addWishlist-submit" value="Post">
-  </form> 
+  <button class="allWishlistsButton btn btn-primary">All Wishlists</button><br><br>
+  <form id="addWishlist-form">
+    <div class="form-group">
+      <label for="addWishlist-title">Wishlist Title</label>
+      <input class="form-control" rows="1" placeholder="Title" id="addWishlist-title" />
+    </div>
+    <div class="form-group">
+      <label for="addWishlist-title">Wishlist Description</label>
+      <textarea class="form-control" rows="3" placeholder="Description" id="addWishlist-description"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="addWishlist-image">Immagine</label>
+      <input type="file" id="addWishlist-image">
+      <p class="help-block">Carica un immagine per la tua Wishlist</p>
+    </div>
+    <div class="radio">
+      <label>
+    <input type="radio"  name="addWishlist-private"  value="false" checked>
+    Public (every registered user can see and comment it)
+  </label>
+    </div>
+    <div class="radio">
+      <label>
+    <input type="radio"  name="addWishlist-private" value="true">
+    Private (only you can see it)
+  </label>
+    </div>
+    <div class="radio disabled">
+      <label>
+    <input type="radio" name="addWishlist-private" id="addWishlist-private-users" value="true" disabled>
+    Restricted to specific users
+  </label>
+    </div>
+    <div class="form-group">
+      <label for="addWishlist-title">Expire date</label>
+      <input class="form-control" placeholder="Expire Date" id="addWishlist-expireDate" />
+    </div>
+
+    <input type="submit" class="btn btn-primary pull-right" id="addWishlist-submit" value="Post">
+  </form>
 </template>

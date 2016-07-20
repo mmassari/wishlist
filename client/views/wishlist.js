@@ -63,19 +63,19 @@ Template.wishlist.helpers({
     return Meteor.userId() === author;
   }
 });
-
 /* wishlist template events */
 Template.wishlist.events({
-  'click [data-id=load-more]': (event, template) => {
+  'click #load-more': (event, template) => {
     template.limit.set(template.limit.get() + 20);
   },
-  'keyup [data-id=search-wishlists-query]': _.debounce((event, template) => {
+  
+  'keyup #search-wishlists-query': _.debounce((event, template) => {
     event.preventDefault();
 
-    template.searchQuery.set(template.find('[data-id=search-wishlists-query]').value);
+    template.searchQuery.set(template.find('#search-wishlists-query').value);
     template.limit.set(20);
   }, 300),
-  'submit [data-id=search-wishlists-form]': (event, template) => {
+  'submit #search-wishlists-form': (event, template) => {
     event.preventDefault();
   },
   'click #postWishlistButton': (event, template) => {
@@ -85,13 +85,13 @@ Template.wishlist.events({
     Session.set('selectedWishlist', event.currentTarget.id);
     Session.set('currentView', 'singleWishlist');
   },
-  'click [data-id=edit-wishlist]': (event, template) => {
+  'click #edit-wishlist': (event, template) => {
     event.stopPropagation();
 
     Session.set('selectedWishlist', event.currentTarget.parentNode.id);
     Session.set('currentView', 'editWishlist');
   },
-  'click [data-id=remove-wishlist]': (event, template) => {
+  'click #remove-wishlist': (event, template) => {
     event.stopPropagation();
 
     // Sweet Alert delete confirmation
@@ -172,32 +172,31 @@ Template.singleWishlist.events({
 
 /* addWishlist template onRendered */
 Template.addWishlist.onRendered(function() {
-  $('[data-id=addWishlist-submit]').addClass('disabled');
+  $('#addWishlist-submit').addClass('disabled');
+  $('#addWishlist-expireDate').datepicker();
 
   if (isCurrentView('editWishlist')) {
     let wishlistToEdit = Wishlists.findOne({ _id: Session.get('selectedWishlist') } );
 
     // Fill in fields with existing data
-    $('[data-id=addWishlist-title]').val(wishlistToEdit.title);
-    $('[data-id=addWishlist-location]').val(wishlistToEdit.location);
-    $('[data-id=addWishlist-description]').val(wishlistToEdit.description);
-    $('[data-id=addWishlist-responsibilities]').val(wishlistToEdit.responsibilities);
-    $('[data-id=addWishlist-qualifications]').val(wishlistToEdit.qualifications);
-    $('[data-id=addWishlist-schedule]').val(wishlistToEdit.schedule);
+    $('#addWishlist-title').val(wishlistToEdit.title);
+    $('#addWishlist-description').val(wishlistToEdit.description);
+    $('#addWishlist-image').val(wishlistToEdit.image);
+    $('#addWishlist-private').val(wishlistToEdit.private);
+    $('#addWishlist-expireDate').val(wishlistToEdit.expireDate);
 
     // Keep track of original values
-    Session.set('startingTitle', $('[data-id=addWishlist-title]').val());
-    Session.set('startingLocation', $('[data-id=addWishlist-location]').val());
-    Session.set('startingDescription', $('[data-id=addWishlist-description]').val());
-    Session.set('startingResponsibilities', $('[data-id=addWishlist-responsibilities]').val());
-    Session.set('startingQualifications', $('[data-id=addWishlist-qualifications]').val());
-    Session.set('startingSchedule', $('[data-id=addWishlist-schedule]').val());
+    Session.set('startingTitle', $('#addWishlist-title').val());
+    Session.set('startingDescription', $('#addWishlist-description').val());
+    Session.set('startingImage', $('#addWishlist-image').val());
+    Session.set('startingPrivate', $('input[name=addWishlist-private]:checked').val());
+    Session.set('startingExpireDate', $('#addWishlist-expireDate').val());
 
     // Change button text
-    $('[data-id=addWishlist-submit]').prop('value', 'Save');
+    $('#addWishlist-submit').prop('value', 'Save');
   } else if (isCurrentView('addWishlist')) {
     // Change button text
-    $('[data-id=addWishlist-submit]').prop('value', 'Post');
+    $('#addWishlist-submit').prop('value', 'Post');
   }
 });
 
@@ -206,47 +205,43 @@ Template.addWishlist.events({
   'click .allWishlistsButton': (event, template) => {
     Session.set('currentView', 'allWishlists');
   },
-  'keyup [data-id=addWishlist-title], keyup [data-id=addWishlist-location], keyup [data-id=addWishlist-description], keyup [data-id=addWishlist-responsibilities], keyup [data-id=addWishlist-qualifications], change [data-id=addWishlist-schedule]': (event, template) => {
+  'keyup #addWishlist-title, keyup #addWishlist-description, change #addWishlist-image, change [name=addWishlist-private], keyup #addWishlist-expireDate': (event, template) => {
     if (isCurrentView('addWishlist')) {
-      // If Wishlist title, location, and description sections have text enable the submit button, else disable it
-      if (template.find('[data-id=addWishlist-title]').value.toString().trim() !== '' &&
-      template.find('[data-id=addWishlist-location]').value.toString().trim() !== '' &&
-      template.find('[data-id=addWishlist-description]').value.toString().trim() !== '') {
-        $('[data-id=addWishlist-submit]').removeClass('disabled');
+      // If Wishlist title have text enable the submit button, else disable it
+      if (template.find('#addWishlist-title').value.toString().trim() !== '') {
+        $('#addWishlist-submit').removeClass('disabled');
       } else {
-        $('[data-id=addWishlist-submit]').addClass('disabled');
+        $('#addWishlist-submit').addClass('disabled');
       }
     } else if (isCurrentView('editWishlist')) {
       // If any of the values have changed enable the save button, else disable it
-      if (template.find('[data-id=addWishlist-title]').value.toString().trim() !== Session.get('startingTitle') ||
-      template.find('[data-id=addWishlist-location]').value.toString().trim() !== Session.get('startingLocation') ||
-      template.find('[data-id=addWishlist-description]').value.toString().trim() !== Session.get('startingDescription') ||
-      template.find('[data-id=addWishlist-responsibilities]').value.toString().trim() !== Session.get('startingResponsibilities') ||
-      template.find('[data-id=addWishlist-qualifications]').value.toString().trim() !== Session.get('startingQualifications') ||
-      template.find('[data-id=addWishlist-schedule]').value !== Session.get('startingSchedule')) {
-        $('[data-id=addWishlist-submit]').removeClass('disabled');
+      if (template.find('#addWishlist-title').value.toString().trim() !== Session.get('startingTitle') ||
+      template.find('#addWishlist-description').value.toString().trim() !== Session.get('startingDescription') ||
+      template.find('#addWishlist-image').value.toString().trim() !== Session.get('startingImage') ||
+      template.find('input[name=addWishlist-private]:checked').value.toString().trim() !== Session.get('startingPrivate') ||
+      template.find('#addWishlist-expireDate').value !== Session.get('startingExpireDate')) {
+        $('#addWishlist-submit').removeClass('disabled');
       } else {
-        $('[data-id=addWishlist-submit]').addClass('disabled');
+        $('#addWishlist-submit').addClass('disabled');
       }
     }
   },
-  'submit [data-id=addWishlist-form]': (event, template) => {
+  'submit #addWishlist-form': (event, template) => {
     event.preventDefault();
 
     // Only continue if button isn't disabled
-    if (!$('[data-id=addWishlist-submit]').hasClass('disabled')) {
+    if (!$('#addWishlist-submit').hasClass('disabled')) {
       // Get values
-      let title = template.find('[data-id=addWishlist-title]').value.toString().trim(),
-          location = template.find('[data-id=addWishlist-location]').value.toString().trim(),
-          schedule = template.find('[data-id=addWishlist-schedule] option:selected').text.trim(),
-          description = template.find('[data-id=addWishlist-description]').value.toString().trim(),
-          responsibilities = template.find('[data-id=addWishlist-responsibilities]').value.toString().trim(),
-          qualifications = template.find('[data-id=addWishlist-qualifications]').value.toString().trim();
+      let title = template.find('#addWishlist-title').value.toString().trim(),
+          description = template.find('#addWishlist-description').value.toString().trim(),
+          image = template.find('#addWishlist-image').value.toString().trim(),
+          private = template.find('input[name=addWishlist-private]:checked').value.trim(),
+          expireDate = template.find('#addWishlist-expireDate').value.toString().trim();
 
       if (isCurrentView('addWishlist')) {
         // Title, location and description should have text
-        if (title && location && description) {
-          Meteor.call('wishlists.post', title, location, schedule, description, responsibilities, qualifications, (error, result) => {
+        if (title) {
+          Meteor.call('wishlists.post', title, description, image, private, expireDate, (error, result) => {
             if (error) {
               Bert.alert(error.reason, 'danger', 'growl-top-right');
             } else {
