@@ -1,0 +1,82 @@
+<template name="wishlist">
+  {{#if showAllWishlists}}
+    <div class="row">
+      <div class="twelve columns">  
+        <button id="postWishlistButton" class="button-primary">Post Wishlist</button>    
+        <form data-id="search-wishlists-form">
+          <input type="text" class="u-full-width" placeholder="Search wishlists..." data-id="search-wishlists-query">
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="twelve columns">
+        {{#each wishlists}}
+          <div id="{{_id}}" class="small-profile">
+            <b>{{title}}</b> <br/>
+            {{location}} <br/>
+            {{formatDate createdOn}}
+            {{#if isAuthor author}}
+              <button class="u-pull-right no-button" data-id="remove-wishlist">
+                <i class="fa fa-trash"></i>
+              </button> 
+              <button class="u-pull-right no-button" data-id="edit-wishlist">
+                <i class="fa fa-pencil"></i>
+              </button>
+            {{/if}}
+          </div>
+        {{/each}}
+        {{#if Template.subscriptionsReady}}
+          {{#unless instance.wishlistsCount.get}}
+            <div class="alert info">There are no matching wishlists to display</div>
+          {{/unless}}
+          {{#if hasMoreWishlists}}
+            <button class="u-full-width" data-id="load-more">Load more</button>
+          {{/if}}
+        {{else}}
+          <div class="text-center">Loading wishlists...</div>
+        {{/if}}   
+      </div>
+    </div>
+  {{else}}
+    {{#if showSingleWishlist}}
+      {{> singleWishlist}}
+    {{else}}
+      {{> addWishlist}}
+    {{/if}}
+  {{/if}} 
+</template>
+
+<template name="singleWishlist">
+  <button class="allWishlistsButton">All Wishlists</button>
+  {{#with getSingleWishlist}}
+    <h3>{{title}}</h3> 
+    {{schedule}} <br/>
+    Date posted: {{formatDate createdOn}} <br/>
+    Location: {{location}} <br/><br/>
+    <b>Description:</b> <br/>
+    {{description}} <br/><br/>
+    <b>Qualifications:</b> <br/>
+    {{qualifications}} <br/><br/>
+    <b>Responsibilities:</b> <br/>
+    {{responsibilities}} <br/><br/>
+    {{#if notAuthor author}}
+      <button id="applyNowButton" class="button-primary">I'm Interested!</button>
+    {{/if}}
+  {{/with}}
+</template>
+
+<template name="addWishlist">
+  <button class="allWishlistsButton">All Wishlists</button>
+  <form data-id="addWishlist-form">
+    <input class="u-full-width addWishlist-single-line" rows="1" placeholder="Title" data-id="addWishlist-title" />
+    <textarea class="u-full-width addWishlist-single-line" rows="3" placeholder="Location" data-id="addWishlist-description"></textarea>
+    <input type="file" class="u-full-width addWishlist-single-line" placeholder="Title" data-id="addWishlist-image">
+    <input type="radio" class="addWishlist-single-line" data-id="addWishlist-private">
+    <input type="radio" class="addWishlist-single-line" data-id="addWishlist-private"  value="false">Public (every registered user can see and comment it)
+    <input type="radio" class="addWishlist-single-line" data-id="addWishlist-private"  value="true">Private (only you can see it)
+    <textarea class="u-full-width addWishlist-multi-line" rows="1" placeholder="Description" data-id="addWishlist-description"></textarea>
+    <textarea class="u-full-width addWishlist-multi-line" rows="1" placeholder="Responsibilities" data-id="addWishlist-responsibilities"></textarea>
+    <textarea class="u-full-width addWishlist-multi-line" rows="1" placeholder="Qualifications" data-id="addWishlist-qualifications"></textarea> 
+    <input type="submit" class="button-primary u-pull-right" data-id="addWishlist-submit" value="Post">
+  </form> 
+</template>
